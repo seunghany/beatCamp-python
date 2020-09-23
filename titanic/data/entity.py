@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 @dataclass
 class Entity:
-
-    context: str : "C:\Users\seung\SbaProjects\titanic\data"
+    context: str : "/Users/seung/SbaProjects/beatCamp-python\titanic\data"
     fname: str = ''
     train : object = None
     test: object = None
