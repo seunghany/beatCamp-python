@@ -1,7 +1,7 @@
 from titanic.entity import Entity
 import numpy as np
 import pandas as pd
-
+# https://github.com/seunghany/beatCamp-python.git
 """
 PassengerId  고객ID,
 Survived 생존여부,  --> 머신러닝 모델이 맞춰야 할 답 
@@ -58,6 +58,11 @@ class Service:
     @staticmethod
     def sex_nominal(this) -> object:
         # male = 0, female = 1
+        combine = [this.train, this.test]  # combine two set of data
+        sex_mapping = {'male':0, 'female':1}
+        for dataset in combine:
+            dataset['Sex'] dataset['Sex'].map(sex_mapping)
+            
         this.train['Sex'] = this.train['Sex'].map({'male':0, 'female':1})
         this.test['Sex'] = this.test['Sex'].map({'male':0, 'female':1})
         return this
