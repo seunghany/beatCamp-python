@@ -52,7 +52,22 @@ class Service:
         return this
 
     @staticmethod
-    def name_nominal(this) -> object:
+    def title_nominal(this) -> object:
+        combile = [this.train. this.test]
+        for dataset in combine:
+            dataset['Title'] = dataset.Name.str.extrat('([A-za-z]+\.', expand = False)
+        for dataset in combime:
+            dataset['Title'] = dataset['Title'].replace(['Capt', 'Col', 'Don', 'Dr', 'Major', 'Rev', 'Jonkheer', 'Dona', 'Mme'], 'Rare')
+            dataset['Title'] = dataset['Title'].replace(['Countess', 'Lady', 'Sir'], 'Royal')
+            dataset['Title'] = dataset['Title'].replace('Ms', 'Miss')
+            dataset['Title'] = dataset['Title'].replace('Mlle', 'Mr')
+        title_mapping = {'Mr' : 1, 'Miss':2, 'Mrs':3, 'Master':4, 'Royal':5, 'Rare':6}
+        for dataset in combine:
+            dataset['Title'] = dataset['Title'].map(title_mapping)
+            dataset['Title'] = dataset['Title'].fillna(0)  # for unknown
+        this.train = this.train
+        this.test = this.test
+            
         return this
 
     @staticmethod
@@ -62,13 +77,63 @@ class Service:
         sex_mapping = {'male':0, 'female':1}
         for dataset in combine:
             dataset['Sex'] dataset['Sex'].map(sex_mapping)
-            
-        this.train['Sex'] = this.train['Sex'].map({'male':0, 'female':1})
-        this.test['Sex'] = this.test['Sex'].map({'male':0, 'female':1})
+
+        this.train = this.train  # overiding
+        this.test = this.test
+
+        # this.train['Sex'] = this.train['Sex'].map({'male':0, 'female':1})
+        # this.test['Sex'] = this.test['Sex'].map({'male':0, 'female':1})
         return this
 
     @staticmethod
-    def age_ordinalthis) -> object:
+    def age_ordinalt(this) -> object:
+        train = this.train  # this 를 줄이기 위한 변수 처리
+        test = this.test
+
+        # Stage 1 : Fill NaN (missing file)
+        train['Age'] = train['Age'].fillna(-0.5)  # 아직 나이를 모르니 일단 놔두자
+        # age 는 평균을 넣기도 애매하고, 다수결을 넣기도 너무 근거가 없다..
+        # 특히 age 는 생존율 판단에서 가중치(weight) 상당하므로 디테일한 접근이 필요합니다
+        # 나이를 모르는 승객은 모르는 상태로 처리해야 값의 왜곡을 줄일수 있으모 
+        # -0.5 라는 값을 넣어서 anomaly 처리해 없애 버릴려고 합니다
+        bins = [-1, 0, 5, 12, 18, 24, 35, 60, np.inf]  # 총 9 # 범위
+        # [] 에 있으니 이것은 변수명 이라고 생각하면 됩니다.
+        labels = ['Unkown', 'Baby', 'Child', 'Teenager', 'Student', 'Young Adult', 'Adult', 'Senior'] # 총 8
+        train['AgeGroup'] = pd.cut(train['Age'], bins, labels=labels)
+        test['AgeGroup'] = pd.cut(train['Age'], bins, labels=labels)
+        age_title_mapping = {
+            0:'Unkown',
+            1:'Baby',
+            2:'Child',
+            3:'Teenager',
+            4:'Student',
+            5:'Young Adult',
+            6:'Adult', 
+            7:'Senior'
+        }  # 이렇게 [] -> {} 
+
+        for x in range(len(train['AgeGroup'])):
+            if train['AgeGroup'][x] = 'Unknown':
+                train['AgeGroup'][x] = age_title_mapping[train['Title'][x]]
+        for x in range(len(test['AgeGroup'])):
+            if train['AgeGroup'][x] = 'Unknown':
+                train['AgeGroup'][x] = age_title_mapping[train['Title'][x]]
+
+        age_mapping = {
+            'Unkown':0
+            'Baby':1,
+            'Child':2,
+            'Teenager':3,
+            'Student':4,
+            'Young Adult':5,
+            'Adult':6,
+            'Senior':7
+        }
+        train['AgeGroup'] = train['AgeGroup'].map(age_mapping)
+        test['AgeGroup'] = test['AgeGroup'].map(age_mapping)
+
+        this.train = train
+        this.test = test
         return this
     
     @staticmethod
@@ -98,7 +163,8 @@ class Service:
         # 교과서 146 pg 문자 blue = 0, green = 1, red = 2 로 치환 합니다.
         # 이런식으로 정수로 치환을 해서 사용 합니다.
         this.train['Embarked'] = this.train['Embarked'].map({'S' :1, "C" : 2, "Q": 3})
-        return this
+        this.test['Embarked'] = this.train['Embarked'].map({'S' :1, "C" : 2, "Q": 3})
+
     
         return this
     
