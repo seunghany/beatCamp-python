@@ -1,0 +1,1 @@
+# url, parser, path, api, apikey == > type all str
