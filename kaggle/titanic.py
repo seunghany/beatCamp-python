@@ -17,7 +17,7 @@ from sklearn.model_selection import cross_val_score
 # dtree, rforest, nb, knn, svm,  
 """
 context = "/Users/seung/SbaProjects/beatCamp-python"
-fname = "/titanic/data"
+fname = "/kaggle/data"
 """
 
 class Service:
