@@ -25,7 +25,7 @@ class Controller:
         self.service = Service()
 
 
-    def modeling(self,train, test):
+    def modeling(self, train, test):
         service = self.service
         this = self.preprocessing(train, test)
         print(f'훈련 컬럼: {this.train.colums}')
@@ -76,7 +76,9 @@ class Controller:
         return this
 
     def learing(self):  # evaluation과 합친다.
-        pass
+        # service = self.service
+        # this = self.modeling(train, test)
+        # print(f'결정 트리 검증 결과: {service.accuacy_by_dtree(this)}')
 
     def submit(self):  # 파일로 저장
         pass

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Entity:
     context: str = "/Users/seung/SbaProjects/beatCamp-python/"
     fname: str = ''
-    train : object = None
+    train: object = None
     test: object = None
     id: str = ''
     label: str = ''
@@ -19,7 +19,7 @@ class Entity:
     #     self._label = label
 
     # @property
-    # def context(self) -> str: # return type 이 str 이란 의미 
+    # def context(self) -> str: # return type 이 str 이란 의미
     #     return self._context
 
     # @context
@@ -29,7 +29,6 @@ class Entity:
     # @property
     # def name(self):
     #     return self._fname
-
 
     # @context
     # def name(self, fname):

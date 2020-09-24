@@ -4,7 +4,7 @@ import pandas as pd
 # https://github.com/seunghany/beatCamp-python.git
 """
 PassengerId  고객ID,
-Survived 생존여부,  --> 머신러닝 모델이 맞춰야 할 답 
+Survived 생존여부,  --> 머신러닝 모델이 맞춰야 할 답
 Pclass 승선권 1 = 1등석, 2 = 2등석, 3 = 3등석,
 Name,
 Sex,
@@ -31,18 +31,18 @@ class Service:
     @staticmethod
     def create_train(this):
         return this.train.drop('Survived', axos=1)  # train 은  답이 제거된 데이터 셋이다
-    
+
     # 라벨을 만든다는건 지도 학습을 하겠다는 뜻
     @staticmethod
     def create_label(this):
-        return this.train['Survived']  # label 이 곧 답이 된다 
+        return this.train['Survived']  # label 이 곧 답이 된다.
 
     # Self 없이 차원 축소하기 위해 drop_feature 기능을 만듭니다
     # feature 이 너무 많으면 속도가 너무 느려짐 -> 차원의 저주가 걸림
     @staticmethod
     def drop_feature(this, feature):
-        this.train = this.train.drop([feature], axis = 1)
-        this.test = this.test.drop([feature], axis = 1) # pg 149 보면 훈련 세트 나옴
+        this.train = this.train.drop([feature], axis=1)
+        this.test = this.test.drop([feature], axis=1)  # pg 149 보면 훈련 세트 나옴
         return this
 
     # order
@@ -55,26 +55,26 @@ class Service:
     def title_nominal(this) -> object:
         combine = [this.train. this.test]
         for dataset in combine:
-            dataset['Title'] = dataset.Name.str.extrat('([A-za-z]+\.', expand = False)
-        for dataset in combime:
+            dataset['Title'] = dataset.Name.str.extract('([A-Za-z]+)\.', expand=False)
+        for dataset in combine:
             dataset['Title'] = dataset['Title'].replace(['Capt', 'Col', 'Don', 'Dr', 'Major', 'Rev', 'Jonkheer', 'Dona', 'Mme'], 'Rare')
             dataset['Title'] = dataset['Title'].replace(['Countess', 'Lady', 'Sir'], 'Royal')
             dataset['Title'] = dataset['Title'].replace('Ms', 'Miss')
             dataset['Title'] = dataset['Title'].replace('Mlle', 'Mr')
-        title_mapping = {'Mr' : 1, 'Miss': 2, 'Mrs': 3, 'Master' : 4, 'Royal': 5, 'Rare' : 6}
+        title_mapping = {'Mr': 1, 'Miss': 2, 'Mrs': 3, 'Master': 4, 'Royal': 5, 'Rare': 6}
         for dataset in combine:
             dataset['Title'] = dataset['Title'].map(title_mapping)
             dataset['Title'] = dataset['Title'].fillna(0)  # for unknown
         this.train = this.train
         this.test = this.test
-            
+
         return this
 
     @staticmethod
     def sex_nominal(this) -> object:
         # male = 0, female = 1
         combine = [this.train, this.test]  # combine two set of data
-        sex_mapping = {'male':0, 'female':1}
+        sex_mapping = {'male': 0, 'female': 1}
         for dataset in combine:
             dataset['Sex'] = dataset['Sex'].map(sex_mapping)
         this.train = this.train  # overiding
@@ -93,23 +93,23 @@ class Service:
         train['Age'] = train['Age'].fillna(-0.5)  # 아직 나이를 모르니 일단 놔두자
         # age 는 평균을 넣기도 애매하고, 다수결을 넣기도 너무 근거가 없다..
         # 특히 age 는 생존율 판단에서 가중치(weight) 상당하므로 디테일한 접근이 필요합니다
-        # 나이를 모르는 승객은 모르는 상태로 처리해야 값의 왜곡을 줄일수 있으모 
+        # 나이를 모르는 승객은 모르는 상태로 처리해야 값의 왜곡을 줄일수 있으므로
         # -0.5 라는 값을 넣어서 anomaly 처리해 없애 버릴려고 합니다
         bins = [-1, 0, 5, 12, 18, 24, 35, 60, np.inf]  # 총 9 # 범위
         # [] 에 있으니 이것은 변수명 이라고 생각하면 됩니다.
-        labels = ['Unkown', 'Baby', 'Child', 'Teenager', 'Student', 'Young Adult', 'Adult', 'Senior'] # 총 8
+        labels = ['Unkown', 'Baby', 'Child', 'Teenager', 'Student', 'Young Adult', 'Adult', 'Senior']  # 총 8
         train['AgeGroup'] = pd.cut(train['Age'], bins, labels=labels)
         test['AgeGroup'] = pd.cut(train['Age'], bins, labels=labels)
         age_title_mapping = {
-            0:'Unkown',
-            1:'Baby',
-            2:'Child',
-            3:'Teenager',
-            4:'Student',
-            5:'Young Adult',
-            6:'Adult', 
-            7:'Senior'
-        }  # 이렇게 [] -> {} 
+            0: 'Unkown',
+            1: 'Baby',
+            2: 'Child',
+            3: 'Teenager',
+            4: 'Student',
+            5: 'Young Adult',
+            6: 'Adult',
+            7: 'Senior'
+        }  # 이렇게 [] -> {}
 
         for x in range(len(train['AgeGroup'])):
             if train['AgeGroup'][x] == 'Unknown':
@@ -146,7 +146,7 @@ class Service:
     @staticmethod
     def fareBand_nominal(this) -> object:  # 요금이 다양하니 Clustering 을 하기위한 준비
         this.train = this.train.fillna({'FareBand': 1})  # FareBand 는 없는 변수인데 추가함
-        this.test = this.test.fillna({'FareBand' : 1})
+        this.test = this.test.fillna({'FareBand': 1})
         return this
 
     @staticmethod
@@ -161,8 +161,8 @@ class Service:
         # 많은 머신러닝 라이브러리 클래스 레이블은 "정수" 로 인코딩 되어있을거라고 기대되고 있음
         # 교과서 146 pg 문자 blue = 0, green = 1, red = 2 로 치환 합니다.
         # 이런식으로 정수로 치환을 해서 사용 합니다.
-        this.train['Embarked'] = this.train['Embarked'].map({'S' : 1, "C" : 2, "Q" : 3})
-        this.test['Embarked'] = this.train['Embarked'].map({'S' : 1, "C" : 2, "Q" : 3})
+        this.train['Embarked'] = this.train['Embarked'].map({'S': 1, "C": 2, "Q": 3})
+        this.test['Embarked'] = this.train['Embarked'].map({'S': 1, "C": 2, "Q": 3})
 
         return this
 
