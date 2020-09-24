@@ -15,6 +15,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold  # k값은 count 로 의미로 이해
 from sklearn.model_selection import cross_val_score
 # dtree, rforest, nb, knn, svm,  
+"""
+context = "/Users/seung/SbaProjects/beatCamp-python"
+fname = "/titanic/data"
+"""
+
 class Service:
     def __init__(self):
         self.fileReader = FileReader()
@@ -23,9 +28,10 @@ class Service:
     # this.fname 만 있으면  ~> getter
     def new_model(self, payload) -> object:
         this = self.fileReader
+        this.context = "/Users/seung/SbaProjects/beatCamp-python/kaggle/data/"
         this.fname = payload
         # p.139 df = tensor
-        return pd.read_csv(this.context+'/titanic/' + this.fname)
+        return pd.read_csv(this.context + this.fname)
 
     @staticmethod
     def create_train(this):
