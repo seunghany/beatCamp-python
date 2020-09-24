@@ -39,7 +39,7 @@ class Service:
 
     @staticmethod
     def create_train(this):
-        return this.train.drop('Survived', axos=1)  # train 은  답이 제거된 데이터 셋이다
+        return this.train.drop('Survived', axis=1)  # train 은  답이 제거된 데이터 셋이다
 
     # 라벨을 만든다는건 지도 학습을 하겠다는 뜻
     @staticmethod
@@ -62,7 +62,7 @@ class Service:
 
     @staticmethod
     def title_nominal(this) -> object:
-        combine = [this.train. this.test]
+        combine = [this.train, this.test]
         for dataset in combine:
             dataset['Title'] = dataset.Name.str.extract('([A-Za-z]+)\.', expand=False)
         for dataset in combine:
@@ -94,7 +94,7 @@ class Service:
         return this
 
     @staticmethod
-    def age_ordinalt(this) -> object:
+    def age_ordinal(this) -> object:
         train = this.train  # this 를 줄이기 위한 변수 처리
         test = this.test
 

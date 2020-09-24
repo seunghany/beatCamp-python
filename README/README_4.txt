@@ -27,3 +27,21 @@ null 의 숫자가 적으니 크게 영향을 미치진 않는다.
 하지만 null 값이 있으면, 그 데이터 자체를 사용 할 수 없으니 
 차라리 조금 영향을 끼치더라고 사용하도록 합시다
 
+@staticmethod
+def sex_norminal(this)--> object
+    # male = 0, female = 1
+    this.train['Sex'] = this.train['Sex'].map({'male:0', 'female:1'})
+    this.train['Sex'] = this.test['Sex'].map({'male:0', 'female:1'})
+
+    코딩은 반복된 코드를 싫어합니다.
+    for(), while() 이 존재하는 이유
+
+    그래서 위 코드에서 반복을 피하기 위해서 (지도학습의 숙명인 train과 테스트 둘다 편집해야 하는 상황)
+    다음과 같은 코드가 나옵니다.
+
+    combine = [this.train, this.test]  # combine two set of data
+        sex_mapping = {'male': 0, 'female': 1}
+        for dataset in combine:
+            dataset['Sex'] = dataset['Sex'].map(sex_mapping)
+        this.train = this.train  # overiding
+        this.test = this.test
