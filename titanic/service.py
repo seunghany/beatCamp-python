@@ -1,6 +1,15 @@
 from titanic.entity import Entity
-import numpy as np
 import pandas as pd
+import numpy as np
+# sklearn algorithm : classification, regression, clustring, reduction
+from sklearn.tree import DecisionTreeClassifier  # dtree
+from sklearn.ensemble import RandomForestClassifier  # rforest
+from sklearn.naive_bayes import GaussianNB  # nb
+from sklearn.neighbors import KNeighborsClassifier  # knn
+from sklearn.svm import SVC  # svm
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold  # k값은 count 로 의미로 이해
+from sklearn.model_selection import cross_val_score
 # https://github.com/seunghany/beatCamp-python.git
 """
 PassengerId  고객ID,
@@ -25,8 +34,8 @@ class Service:
     def new_model(self, payload) -> object:
         this = self.entity
         this.fname = payload
-        return pd.read_csv(this.context+'/titanic/' + this.fname) # p.139 df = tensor
-
+        # p.139 df = tensor
+        return pd.read_csv(this.context+'/titanic/' + this.fname)
 
     @staticmethod
     def create_train(this):
@@ -156,7 +165,7 @@ class Service:
 
     @staticmethod
     def embarked_nominal(this) -> object:
-        this.train = this.train.fillna({'Embarked': 'S'})  # S 가 가장 많이 쓰이므로 이것으로 빈칸을 채움
+        this.train = this.train.fillna({'Embarked': 'S'})  # S 가 가장 많이 쓰이므로 이것 으로 빈칸을 채움
         this.test = this.test.fillna({"Embarked": "S"})  # 교과서 144pg 참고
         # 많은 머신러닝 라이브러리 클래스 레이블은 "정수" 로 인코딩 되어있을거라고 기대되고 있음
         # 교과서 146 pg 문자 blue = 0, green = 1, red = 2 로 치환 합니다.
@@ -168,17 +177,32 @@ class Service:
 
     # Learning Algorithm 중에서 dtree, rforest, nb, knn svm 이것을 대표로 사용하겠습니다.
 
+    @staticmethod
+    def create_k_fold():
+        return KFold(n_splits=10, shuffle=True, random_state=0)
+    
+
     def accuracy_by_dtree(self, this):
-        pass
+        dtree = DecisionTreeClassifier()
+        score = cross_val_score(dtree, this.train, this.label, cv=Service.create_k_fold(), n_jobs=1, scoring='accuracy')
+        return round(np.mean(score) * 100, 2)
 
     def accuracy_by_rforest(self, this):
-        pass
-
+        rforest = RandomForestClassifier()
+        score = cross_val_score(rforest, this.train, this.label, cv=Service.create_k_fold(), n_jobs=1, scoring='accuracy')
+        return round(np.mean(score) * 100, 2)
+    
     def accuracy_by_nb(self, this):
-        pass
-
+        nb = GaussianNB()
+        score = cross_val_score(nb, this.train, this.label, cv=Service.create_k_fold(), n_jobs=1, scoring='accuracy')
+        return round(np.mean(score) * 100, 2)
+    
     def accuracy_by_knn(self, this):
-        pass
+        knn = KNeighborsClassifier()
+        score = cross_val_score(knn, this.train, this.label, cv=Service.create_k_fold(), n_jobs=1, scoring='accuracy')
+        return round(np.mean(score) * 100, 2)
 
     def accuracy_by_svm(self, this):
-        pass
+        svm = SVC()
+        score = cross_val_score(svm, this.train, this.label, cv=Service.create_k_fold(), n_jobs=1, scoring='accuracy')
+        return round(np.mean(score) * 100, 2)

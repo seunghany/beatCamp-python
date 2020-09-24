@@ -1,7 +1,8 @@
-from titanic.entity import Entity
-from titanic.service import Service
+
 import sys
 sys.path.insert(0, '/Users/seung/SbaProjects/beatCamp-python')
+from titanic.entity import Entity
+from titanic.service import Service
 
 
 class Controller:
@@ -24,14 +25,12 @@ class Controller:
         self.entity = Entity()
         self.service = Service()
 
-
     def modeling(self, train, test):
         service = self.service
         this = self.preprocessing(train, test)
         print(f'훈련 컬럼: {this.train.colums}')
         this.label = service.create_label(this)
         this.train = service.create_train(this)
-
 
     def preprocessing(self, train, test):
         '''

@@ -33,7 +33,6 @@ class Entity:
     # @context
     # def name(self, fname):
     #     self._fname = fname
-    
     # @property
     # def id(self):
     #     return self._id
