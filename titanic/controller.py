@@ -97,6 +97,6 @@ class Controller:
 
 if __name__ == '__main__':
     ctrl = Controller()
-    ctrl.modeling('train.csv', 'test.csv')
-    ctrl.learning('train.csv', 'test.csv')
+    # ctrl.modeling('train.csv', 'test.csv')
+    # ctrl.learning('train.csv', 'test.csv')
     ctrl.submit('train.csv', 'test.csv')
