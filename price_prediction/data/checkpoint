@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/seung/SbaProjects/beatCamp-python/price_prediction/data/saved_model.ckpt"
+all_model_checkpoint_paths: "/Users/seung/SbaProjects/beatCamp-python/price_prediction/data/saved_model.ckpt"
