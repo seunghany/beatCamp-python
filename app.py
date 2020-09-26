@@ -4,14 +4,18 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from flask import Flask
 from flask import render_template, request
 from price_prediction.cabbage  import Cabbage
+from member.student import StudentService
+from member.student import StudentDao
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return render_template('index.html')
+    return render_template('join.html')
 
-
+@app.route('/move/<path>')
+def move(path):
+    return render_template(f'{path}.html')
 
 # method 는 총 4개가 있습니다.
 # GET, POST, PUT, DELETE 그래서 이것들은 array 를 이뤄요.
@@ -43,6 +47,36 @@ def cabbage():
     render_params = {}
     render_params['result'] = result
     return render_template('index.html', **render_params)
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    print(' ######  SIGNUP #########')
+    id = request.form['id']
+    pwd = request.form['pwd']
+    name = request.form['name']
+    birth = request.form['birth']
+    student = Student()
+    student.id = id
+    student.pwd = pwd
+    student.name = name
+    student.birth = birth
+    service = StudentService()
+    # service.add_student(student)
+    return render_template(f'login.html')
+
+
+@app.route('/signin', methods=['POST'])
+def signin():
+    print(' ######  SIGNIN #########')
+    id = request.form['id']
+    pwd = request.form['pwd']
+    service = StudentService()
+    name = service.login(id, pwd)
+    render_params = {}
+    render_params['name'] = name
+    return render_template(f'index.html', **render_params)
+
 
 if __name__ == "__main__":
     app.run()
